@@ -83,7 +83,9 @@ export const FILTER_OPERATORS_REGEX = '('+FILTER_OPERATORS.map(op => {
 }).join('|')+')'
 
 export function hasFilterQuery(filter: string): boolean {
-	return FILTER_OPERATORS.some(o => filter.includes(o))
+	// Use the word-boundary aware operator regex so plain words that merely contain an
+	// operator (e.g. "meeting" contains "in") are treated as a simple search.
+	return new RegExp(FILTER_OPERATORS_REGEX).test(filter)
 }
 
 export function getFilterFieldRegexPattern(field: string): RegExp {
